@@ -68,5 +68,4 @@ The analysis was performed using **Power BI** and supported by preprocessing in 
 
 **👨‍💻 Author**
 
-**Created by - Jay Panchal**
-**Email - panchaljay2711@gmail.com**
+**Created by - Jay Panchal (panchaljay2711@gmail.com)**
