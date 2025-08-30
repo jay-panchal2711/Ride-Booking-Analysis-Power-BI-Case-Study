@@ -1,0 +1,121 @@
+# Data Cleaning & Transformation Steps (Power Query)
+
+Removed blank, null, duplicate, and error rows.
+
+2. Trimmed extra spaces from all text fields.
+
+3. Standardized categorical values:
+   - Vehicle types (Auto, Mini, Sedan, Prime, XL, etc.)
+   - Booking status (Completed, Cancelled, Incomplete)
+   - Payment modes (Cash, Wallet, UPI, Card)
+
+4. Created derived columns:
+   - DateTime = [Date] + [Time]
+   - DayOfWeek = WEEKDAY([DateTime],1) → Monday–Sunday
+   - HourOfDay = HOUR([DateTime])
+
+5. Converted ride flags into binary (0/1):
+   - Cancellation by Driver
+   - Cancellation by Customer
+   - Ride Completed
+
+6. Replaced inconsistent cancellation reasons with standardized labels:
+   - Wrong Address → Address Issue
+   - Customer Not Ready → Customer Delay
+   - Driver No Show → Driver Issue
+
+7. Removed outliers:
+   - Distance > 150 km flagged as invalid
+   - Booking Value > ₹10,000 flagged as invalid
+
+8. Ensured data types:
+   - Date → Date
+   - Time → Time
+   - Distance → Decimal
+   - Booking Value → Currency
+   - Ratings → Decimal (1–5 scale)
+
+
+
+
+-------------------------------------------------------------------------
+
+
+
+# DAX Measures for Ride Booking Analysis
+
+1. Total Rides
+   TotalRides = COUNTROWS('Rides')
+
+2. Completed Rides
+   CompletedRides = CALCULATE(COUNTROWS('Rides'), 'Rides'[Status] = "Completed")
+
+3. Cancelled Rides
+   CancelledRides = CALCULATE(COUNTROWS('Rides'), 'Rides'[Status] = "Cancelled")
+
+4. Avg Ride Distance
+   AvgDistance = AVERAGE('Rides'[Distance])
+
+5. Avg Booking Value
+   AvgBookingValue = AVERAGE('Rides'[BookingValue])
+
+6. Avg Customer Rating
+   AvgCustomerRating = AVERAGE('Rides'[CustomerRating])
+
+7. Peak Hourly Demand
+   PeakHour = SUMMARIZE(
+       'Rides',
+       'Rides'[HourOfDay],
+       "RideCount", COUNTROWS('Rides')
+   )
+
+8. Customer Cancellation Rate
+   CustCancelRate = 
+     DIVIDE(
+       CALCULATE(COUNTROWS('Rides'), 'Rides'[CancelledBy] = "Customer"),
+       [TotalRides],
+       0
+     )
+
+9. Driver Cancellation Rate
+   DriverCancelRate = 
+     DIVIDE(
+       CALCULATE(COUNTROWS('Rides'), 'Rides'[CancelledBy] = "Driver"),
+       [TotalRides],
+       0
+     )
+
+10. Revenue
+    TotalRevenue = SUM('Rides'[BookingValue])
+
+11. Total Cancellations 
+    TotalCancellations= SUM('Table'[Cancelled by Cuetomer]) + SUM('Table'[Cancelled by Driver])
+
+12. Weekdays
+    DayName = FORMAT('Table'[DateTime], "dddd")
+
+13. Hours
+    HourOfDay = HOUR('Table'[DateTime])
+
+----------------------------------------------------------------------
+
+Steps to Create Rating Bins
+
+In Data View, select your Customer Rating column.
+
+Go to Modeling → New group.
+
+In the pop-up:
+
+Group type → Bin
+
+Bin size → for ratings (which are usually 1–5 scale), you can choose:
+
+1 → bins will be 1, 2, 3, 4, 5 (discrete categories)
+
+0.5 → bins will be 1.0–1.5, 1.5–2.0, … (more detailed)
+
+This creates a new column: Customer Rating (bin)
+
+
+
