@@ -60,11 +60,6 @@ The analysis was performed using **Power BI** and supported by preprocessing in 
 
 ---
 
-## 🛠️ How to Use
-1. Clone this repo:
-   ```bash
-   git clone https://github.com/jay-panchal2711/Ride-Booking-Analysis-Power-BI-Case-Study.git
-
 
 **👨‍💻 Author**
 
